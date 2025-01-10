@@ -91,8 +91,6 @@ public class Pipe {
 
     public void draw(Graphics g, ImageObserver observer) {
         g.drawImage(image, horizontalPosition, gapPosition, Constants.PIPE_WIDTH, Constants.PIPE_HEIGHT, observer);
-        g.drawPolygon(collisionZoneTop);
-        g.drawPolygon(collisionZoneBottom);
     }
 
 }

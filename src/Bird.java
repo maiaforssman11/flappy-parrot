@@ -42,7 +42,7 @@ public class Bird {
     /**
      * The rotation angle of the bird.
      */
-    private double angle;
+    public double angle;
 
     /**
      * The change in the angle of the bird since the last animation frame.
@@ -94,6 +94,10 @@ public class Bird {
         return position;
     }
 
+    public void setPosition(int newPos) { this.position = newPos; }
+
+    public void setVelocity(int newVelocity) { this.velocity = newVelocity;}
+
     public void updateSpeedAndAngle() {
         position += (int) velocity;
         velocity += Constants.FALL_POWER;
@@ -138,7 +142,6 @@ public class Bird {
         g2d.rotate(Math.toRadians(angle));
         g2d.drawImage(image, -image.getWidth()/2, -image.getHeight()/2, null);
         g2d.setTransform(originalTransform);
-        g2d.draw(collisionZone);
         g2d.dispose();
     }
 

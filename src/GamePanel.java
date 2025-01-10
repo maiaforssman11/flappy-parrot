@@ -48,6 +48,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     private BufferedImage titleImage;
 
     /**
+     * The game over image
+     */
+    private BufferedImage gameOverImage;
+
+    /**
      * An array of BufferedImages used to represent the player's score.
      */
     private BufferedImage[] numbers;
@@ -122,7 +127,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
         }
         if (state == Constants.STATE_OVER) {
-
+            if (bird.getPosition() < 584) {
+                bird.updateSpeedAndAngle();
+            }
+            else {
+                bird.setPosition(584);
+                bird.setVelocity(0);
+                bird.angle = 90;
+            }
         }
     }
 
@@ -142,9 +154,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         if (bird.getPosition() >= 584) {
             state = Constants.STATE_OVER;
         }
-//        if (bird.collisionZone.getBounds().intersects(pipes.peekFirst().collisionZoneTop.getBounds())) {
-//            state = Constants.STATE_OVER;
-//        }
+        if (bird.collisionZone.getBounds().intersects(pipes.peekFirst().collisionZoneTop.getBounds())) {
+            state = Constants.STATE_OVER;
+        }
         if (bird.collisionZone.getBounds().intersects(pipes.peekFirst().collisionZoneBottom.getBounds())) {
             state = Constants.STATE_OVER;
         }
@@ -183,8 +195,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         catch (IOException e){
             System.out.println("Error in opening title image");
         }
+        try {
+            gameOverImage = ImageIO.read(new File("images/gameover.png"));
+        }
+        catch (IOException e){
+            System.out.println("Error in opening game over image");
+        }
         if (state == Constants.STATE_INACTIVE) {
-            g.drawImage(titleImage, 0, 0, this);
+            g.drawImage(titleImage, 50, 50, this);
         }
 
         if (state != Constants.STATE_INACTIVE && state != Constants.STATE_CREATE) {
@@ -194,6 +212,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
 
         paintScore(g);
+
+        if (state == Constants.STATE_OVER) {
+            g.drawImage(gameOverImage, 70, 150, this);
+        }
 
         ground.draw(g, this);
         Graphics2D g2d = (Graphics2D) g;
@@ -206,8 +228,17 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
      */
     public void paintScore(Graphics g) {
         if (state != Constants.STATE_INACTIVE && state != Constants.STATE_CREATE) {
-            int lastDigit = score % 10;
-            g.drawImage(numbers[lastDigit], 50, 50, this);
+            String scoreString = Integer.toString(score);
+            for (int i = 0; i < scoreString.length(); i++) {
+                int digit = Character.getNumericValue(scoreString.charAt(i));
+
+                    g.drawImage(numbers[digit], 50 + (25 * i), 50, this );
+
+//                else {
+//                    g.drawImage(numbers[digit], 50 + (25 * i), 50, this );
+//                }
+
+            }
         }
     }
 
