@@ -25,6 +25,9 @@ public class App implements Runnable {
      */
     int FPS = 60;
 
+    /**
+     * Creates an instance of the Flappy Parrot game app.
+     */
     public App() {
         initWindow();
         start();
@@ -48,6 +51,9 @@ public class App implements Runnable {
 
     }
 
+    /**
+     * Handles the frame rate for the game and timing of updates.
+     */
     public void run() {
 
         double updateInterval = 1000000000/FPS;
@@ -72,11 +78,17 @@ public class App implements Runnable {
         stop();
     }
 
+    /**
+     * Starts the game thread.
+     */
     public synchronized void start() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
+    /**
+     * Stops the game thread.
+     */
     public synchronized void stop() {
         try {
             gameThread.join();
@@ -86,6 +98,9 @@ public class App implements Runnable {
         }
     }
 
+    /**
+     * Main program that runs the flappy parrot game app.
+     */
     public static void main(String[] args) {
         new App();
     }

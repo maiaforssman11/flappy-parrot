@@ -1,4 +1,3 @@
-import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -59,29 +58,13 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     private BufferedImage[] numbers;
 
     /**
-     * The white overlay image.
-     */
-    private BufferedImage whiteOverlay;
-
-    /**
-     * The black overlay image.
-     */
-    private BufferedImage blackOverlay;
-
-    /**
-     * The current transparency values of the white/black overlay images.
-     */
-    private float transparency;
-
-    /**
      * The state of the game.
      */
     private int state;
 
-    public int getState() {
-        return state;
-    }
-
+    /**
+     * Initializes the game panel.
+     */
     public GamePanel() {
         setPreferredSize(new Dimension(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT));
         setDoubleBuffered(true);
@@ -97,8 +80,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         score = 0;
 
         numbers = new BufferedImage[10];
-
-        transparency = 0.0f;
 
         try {
             numbers[0] = ImageIO.read(new File("images/0.png"));
@@ -117,6 +98,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
     }
 
+    /**
+     * Handles all game updates and game state changes.
+     */
     public void update() {
         if (state == Constants.STATE_INACTIVE) {
             bird.animate(Constants.FLAP_RATE_INACTIVE);
@@ -153,18 +137,27 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
     }
 
+    /**
+     * Adds new pipes to pipes as the ground scrolls to the left.
+     */
     private void populatePipes() {
         if (pipes.getLast().horizontalPosition == Constants.NEW_PIPE_POS) {
             pipes.add(new Pipe());
         }
     }
 
+    /**
+     * Removes pipes from pipes if they have gone off the window screen.
+     */
     private void removePipes() {
         if (pipes.getFirst().horizontalPosition + Constants.PIPE_WIDTH <= 0) {
             pipes.poll();
         }
     }
 
+    /**
+     * Checks if the bird has collided with the ground or the pipes.
+     */
     private void checkCollisions() {
         if (bird.getPosition() >= 584) {
             state = Constants.STATE_OVER;
@@ -178,7 +171,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     }
 
     /**
-     *
+     * Adds 1 to the player's score if the bird has passed through a pipe without a collision.
      */
     public void countPoints() {
         Pipe first = pipes.peekFirst();
@@ -188,6 +181,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
     }
 
+    /**
+     * Resets the game to the inactive game state if the player decides to play again after a
+     * collision.
+     */
     public void reset() {
         score = 0;
         pipes.clear();
@@ -201,6 +198,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     }
 
+    /**
+     * Paints all components of the game panel.
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -223,18 +223,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
         catch (IOException e){
             System.out.println("Error in opening game over image");
-        }
-        try {
-            whiteOverlay = ImageIO.read(new File("images/whitescreen.png"));
-        }
-        catch (IOException e){
-            System.out.println("Error in opening white overlay image");
-        }
-        try {
-            blackOverlay = ImageIO.read(new File("images/blackscreen.png"));
-        }
-        catch (IOException e) {
-            System.out.println("Error in opening black overlay image");
         }
 
         if (state == Constants.STATE_INACTIVE) {
@@ -274,19 +262,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
     }
 
-//    public void paintOverlay(Graphics2D g2d) {
-//        if (state == Constants.STATE_OVER) {
-//            if (transparency < 1.0f) {
-//                transparency += .1f;
-//            }
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
-//            g2d.drawImage(whiteOverlay, 0, 0, this);
-//            if (transparency >= 1.0f) {
-//                transparency = 0.0f;
-//            }
-//        }
-//    }
-
+    /**
+     * Handles mouse clicks triggering bird flaps or a reset to the inactive game state.
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         if (state == Constants.STATE_INACTIVE) {

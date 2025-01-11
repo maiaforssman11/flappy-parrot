@@ -16,11 +16,6 @@ public class Ground {
     private BufferedImage image;
 
     /**
-     * The speed of the ground (how fast it scrolls)
-     */
-    private int SPEED = 3;
-
-    /**
      * The current position of the first ground image.
      */
     private int pos1;
@@ -44,9 +39,13 @@ public class Ground {
         pos2 = Constants.GROUND_WIDTH;
     }
 
+    /**
+     * Moves the positions of the two ground images GROUND_SPEED to the left every frame for a
+     * seamless scrolling effect.
+     */
     public void moveGround() {
-        this.pos1 -= SPEED;
-        this.pos2 -= SPEED;
+        this.pos1 -= Constants.GROUND_SPEED;
+        this.pos2 -= Constants.GROUND_SPEED;
 
         if (pos1 <= -Constants.GROUND_WIDTH) {
             pos1 = pos2 + Constants.GROUND_WIDTH;
@@ -56,6 +55,9 @@ public class Ground {
         }
     }
 
+    /**
+     * Draws the ground images.
+     */
     public void draw(Graphics g, ImageObserver observer) {
         g.drawImage(image, pos1, Constants.SCREEN_HEIGHT - Constants.GROUND_HEIGHT, observer);
 

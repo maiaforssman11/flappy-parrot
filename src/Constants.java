@@ -1,6 +1,6 @@
 public class Constants {
     /**
-     * Game states
+     * Game states.
      */
     public static final int STATE_INACTIVE = 1;
     public static final int STATE_CREATE = 2;
@@ -18,12 +18,14 @@ public class Constants {
      */
     public static final int GROUND_WIDTH = 432;
     public static final int GROUND_HEIGHT = 156;
+    public static final int GROUND_SPEED = 3;
 
     /**
-     * Constants for bird dimensions.
+     * Constants for bird dimensions/characteristics.
      */
     public static final int BIRD_WIDTH = 51;
     public static final int BIRD_HEIGHT = 36;
+    public static final int START_POSITION = 350;
 
     /**
      * Constants for pipe dimensions.

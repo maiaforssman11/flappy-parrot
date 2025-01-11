@@ -27,11 +27,6 @@ public class Pipe {
     Polygon collisionZoneBottom;
 
     /**
-     * The speed of the pipe.
-     */
-    private int SPEED = 3;
-
-    /**
      * The vertical position of the pipe, determined using Math.random() to generate a random
      * position between a MIN and MAX value.
      */
@@ -55,7 +50,7 @@ public class Pipe {
 
         int MIN = -400;
         int MAX = -200;
-        gapPosition = MIN + (int)(Math.random() * ((MAX - MIN) + 1));
+        gapPosition = MIN + (int)(Math.random() * ((MAX - MIN) + 1)); // Random position generation for pipe
         horizontalPosition = Constants.SCREEN_WIDTH + Constants.PIPE_WIDTH;
 
         collisionZoneTop = new Polygon();
@@ -71,10 +66,16 @@ public class Pipe {
         collisionZoneBottom.addPoint(horizontalPosition + Constants.PIPE_WIDTH, -(-Constants.PIPE_HEIGHT/2 + gapPosition + 73));
     }
 
+    /**
+     * Moves the pipe GROUND_SPEED to the left every frame.
+     */
     public void movePipe() {
-        this.horizontalPosition -= SPEED;
+        this.horizontalPosition -= Constants.GROUND_SPEED;
     }
 
+    /**
+     * Updates the points of the top and bottom collision zones.
+     */
     public void updateCollisionZones() {
         collisionZoneTop.reset();
         collisionZoneTop.addPoint(horizontalPosition + Constants.PIPE_WIDTH, Constants.PIPE_HEIGHT/2 + gapPosition - 75);
@@ -89,6 +90,9 @@ public class Pipe {
         collisionZoneBottom.addPoint(horizontalPosition + Constants.PIPE_WIDTH, -(-Constants.PIPE_HEIGHT/2 + gapPosition + 73));
     }
 
+    /**
+     * Draws the pipe image.
+     */
     public void draw(Graphics g, ImageObserver observer) {
         g.drawImage(image, horizontalPosition, gapPosition, Constants.PIPE_WIDTH, Constants.PIPE_HEIGHT, observer);
     }

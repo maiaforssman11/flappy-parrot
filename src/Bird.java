@@ -1,5 +1,4 @@
 import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.event.MouseEvent;
@@ -45,11 +44,6 @@ public class Bird {
     public double angle;
 
     /**
-     * The change in the angle of the bird since the last animation frame.
-     */
-    private double deltaAngle;
-
-    /**
      * The sprite counter, manages animations of the bird.
      */
     private int spriteCounter;
@@ -72,8 +66,7 @@ public class Bird {
 
         image = images[0];
 
-        int START_POSITION = 350;
-        position = START_POSITION;
+        position = Constants.START_POSITION;
 
         int radius = 21;
         collisionZone = new Ellipse2D.Double(-radius, -radius, 2 * radius, 2 * radius);
@@ -82,14 +75,9 @@ public class Bird {
 
         angle = 0;
 
-        deltaAngle = 0;
-
         spriteCounter = 0;
     }
 
-    /**
-     * Returns the current position of the bird.
-     */
     public int getPosition() {
         return position;
     }
@@ -100,6 +88,10 @@ public class Bird {
 
     public void setAngle(double newAngle) { this.angle = newAngle; }
 
+    /**
+     * Updates the speed and angle of the bird each frame based on the effect of gravity
+     * (FALL_POWER) on the bird.
+     */
     public void updateSpeedAndAngle() {
         position += (int) velocity;
         velocity += Constants.FALL_POWER;
@@ -110,10 +102,12 @@ public class Bird {
         else {
             newAngle = velocity * 8.25;
         }
-        deltaAngle = angle - newAngle;
         angle = newAngle;
     }
 
+    /**
+     * Cycles through the three bird images at a rate of flapRate to simulate its wings flapping.
+     */
     public void animate(int flapRate) {
         spriteCounter++;
         if (spriteCounter > flapRate) {
@@ -130,6 +124,9 @@ public class Bird {
         }
     }
 
+    /**
+     * Moves the circular collision zone of the bird based on the bird's position (vertical).
+     */
     public void updateCollisionZone() {
 
         collisionZone = new Ellipse2D.Double(80, position - 20, 40, 40);
@@ -147,6 +144,10 @@ public class Bird {
         g2d.dispose();
     }
 
+    /**
+     * Responds to e by resetting the bird's velocity to JUMP_POWER, causing the bird to flap
+     * upwards.
+     */
     public void mouseClicked(MouseEvent e) {
         if (e.getID() == MouseEvent.MOUSE_CLICKED) {
             velocity = Constants.JUMP_POWER;
