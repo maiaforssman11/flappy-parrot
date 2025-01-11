@@ -96,7 +96,9 @@ public class Bird {
 
     public void setPosition(int newPos) { this.position = newPos; }
 
-    public void setVelocity(int newVelocity) { this.velocity = newVelocity;}
+    public void setVelocity(int newVelocity) { this.velocity = newVelocity; }
+
+    public void setAngle(double newAngle) { this.angle = newAngle; }
 
     public void updateSpeedAndAngle() {
         position += (int) velocity;

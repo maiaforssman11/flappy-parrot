@@ -1,3 +1,4 @@
+import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -58,6 +59,21 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     private BufferedImage[] numbers;
 
     /**
+     * The white overlay image.
+     */
+    private BufferedImage whiteOverlay;
+
+    /**
+     * The black overlay image.
+     */
+    private BufferedImage blackOverlay;
+
+    /**
+     * The current transparency values of the white/black overlay images.
+     */
+    private float transparency;
+
+    /**
      * The state of the game.
      */
     private int state;
@@ -81,6 +97,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         score = 0;
 
         numbers = new BufferedImage[10];
+
+        transparency = 0.0f;
 
         try {
             numbers[0] = ImageIO.read(new File("images/0.png"));
@@ -122,9 +140,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             bird.updateCollisionZone();
             checkCollisions();
             countPoints();
-        }
-        if (state == Constants.STATE_PAUSED) {
-
         }
         if (state == Constants.STATE_OVER) {
             if (bird.getPosition() < 584) {
@@ -173,6 +188,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
     }
 
+    public void reset() {
+        score = 0;
+        pipes.clear();
+        bird.setPosition(350);
+        bird.setAngle(0);
+        state = Constants.STATE_INACTIVE;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 
@@ -201,6 +224,19 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         catch (IOException e){
             System.out.println("Error in opening game over image");
         }
+        try {
+            whiteOverlay = ImageIO.read(new File("images/whitescreen.png"));
+        }
+        catch (IOException e){
+            System.out.println("Error in opening white overlay image");
+        }
+        try {
+            blackOverlay = ImageIO.read(new File("images/blackscreen.png"));
+        }
+        catch (IOException e) {
+            System.out.println("Error in opening black overlay image");
+        }
+
         if (state == Constants.STATE_INACTIVE) {
             g.drawImage(titleImage, 50, 50, this);
         }
@@ -213,13 +249,15 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
         paintScore(g);
 
+        Graphics2D g2d = (Graphics2D) g;
+
         if (state == Constants.STATE_OVER) {
             g.drawImage(gameOverImage, 70, 150, this);
         }
 
         ground.draw(g, this);
-        Graphics2D g2d = (Graphics2D) g;
         bird.draw(g2d, this);
+
         g2d.dispose();
     }
 
@@ -231,16 +269,23 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             String scoreString = Integer.toString(score);
             for (int i = 0; i < scoreString.length(); i++) {
                 int digit = Character.getNumericValue(scoreString.charAt(i));
-
-                    g.drawImage(numbers[digit], 50 + (25 * i), 50, this );
-
-//                else {
-//                    g.drawImage(numbers[digit], 50 + (25 * i), 50, this );
-//                }
-
+                g.drawImage(numbers[digit], 50 + (25 * i), 50, this );
             }
         }
     }
+
+//    public void paintOverlay(Graphics2D g2d) {
+//        if (state == Constants.STATE_OVER) {
+//            if (transparency < 1.0f) {
+//                transparency += .1f;
+//            }
+//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency));
+//            g2d.drawImage(whiteOverlay, 0, 0, this);
+//            if (transparency >= 1.0f) {
+//                transparency = 0.0f;
+//            }
+//        }
+//    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -248,6 +293,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             state = Constants.STATE_CREATE;
         }
         bird.mouseClicked(e);
+        if (state == Constants.STATE_OVER) {
+            reset();
+        }
     }
 
     @Override
