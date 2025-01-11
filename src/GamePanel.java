@@ -177,7 +177,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         Pipe first = pipes.peekFirst();
         if (first.horizontalPosition <= 25 && first.horizontalPosition >= 22) {
             score += 1;
-            System.out.println(score);
         }
     }
 
